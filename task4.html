@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Task 4</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container my-5" style="max-width: 700px;">
+  <h1 class="mb-4">Registration</h1>
+  <form id="regForm" action="#" method="post" novalidate>
+    <div class="row g-3">
+      <div class="col-md-6">
+        <label for="firstName" class="form-label">First Name</label>
+        <input type="text" class="form-control" id="firstName" placeholder="John" required minlength="2">
+        <div class="valid-feedback">Looks good!</div>
+        <div class="invalid-feedback">First name is required.</div>
+      </div>
+      <div class="col-md-6">
+        <label for="lastName" class="form-label">Last Name</label>
+        <input type="text" class="form-control" id="lastName" placeholder="Smith" required minlength="2">
+        <div class="valid-feedback">Looks good!</div>
+        <div class="invalid-feedback">Last name is required.</div>
+      </div>
+      <div class="col-12">
+        <label for="email" class="form-label">Email</label>
+        <input type="email" class="form-control" id="email" placeholder="name@example.com" required>
+        <div class="valid-feedback">Looks good!</div>
+        <div class="invalid-feedback">Enter a valid email.</div>
+      </div>
+      <div class="col-md-6">
+        <label for="password" class="form-label">Password</label>
+        <input type="password" class="form-control" id="password" required minlength="8">
+        <div class="form-text">At least 8 characters.</div>
+        <div class="valid-feedback">Looks good!</div>
+        <div class="invalid-feedback">Password must be at least 8 characters.</div>
+      </div>
+      <div class="col-md-6">
+        <label for="confirm" class="form-label">Confirm Password</label>
+        <input type="password" class="form-control" id="confirm" required>
+        <div class="valid-feedback">Passwords match!</div>
+        <div class="invalid-feedback">Passwords do not match.</div>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label d-block">Gender</label>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="radio" name="gender" id="male" value="male" required>
+          <label class="form-check-label" for="male">Male</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="radio" name="gender" id="female" value="female" required>
+          <label class="form-check-label" for="female">Female</label>
+          <div class="invalid-feedback">Please select gender.</div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label d-block">Hobbies</label>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="checkbox" id="reading" value="reading">
+          <label class="form-check-label" for="reading">Reading</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="checkbox" id="sports" value="sports">
+          <label class="form-check-label" for="sports">Sports</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="checkbox" id="music" value="music">
+          <label class="form-check-label" for="music">Music</label>
+        </div>
+      </div>
+      <div class="col-12">
+        <label for="country" class="form-label">Country</label>
+        <select class="form-select" id="country" required>
+          <option value="">Choose...</option>
+          <option>Kazakhstan</option>
+          <option>Russia</option>
+          <option>Kyrgyzstan</option>
+          <option>Uzbekistan</option>
+          <option>Other</option>
+        </select>
+        <div class="valid-feedback">Looks good!</div>
+        <div class="invalid-feedback">Please select a country.</div>
+      </div>
+      <div class="col-12">
+        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="reset" class="btn btn-secondary">Reset</button>
+      </div>
+    </div>
+  </form>
+</div>
+
+<script>
+const form = document.getElementById("regForm");
+const fields = form.querySelectorAll("input:not([type=radio]):not([type=checkbox]), select");
+const radios = form.querySelectorAll("input[name=gender]");
+const password = document.getElementById("password");
+const confirm = document.getElementById("confirm");
+
+function checkMatch() {
+  if (confirm.value !== password.value) {
+    confirm.setCustomValidity("Passwords do not match");
+  } else {
+    confirm.setCustomValidity("");
+  }
+}
+
+function mark(el) {
+  checkMatch();
+  const ok = el.checkValidity();
+  el.classList.toggle("is-valid", ok);
+  el.classList.toggle("is-invalid", !ok);
+}
+
+function markGender() {
+  const ok = Array.from(radios).some(function (r) {
+    return r.checked;
+  });
+  radios.forEach(function (r) {
+    r.classList.toggle("is-invalid", !ok);
+  });
+  return ok;
+}
+
+fields.forEach(function (el) {
+  el.addEventListener("input", function () {
+    mark(el);
+    if (el === password && confirm.value !== "") {
+      mark(confirm);
+    }
+  });
+});
+
+radios.forEach(function (r) {
+  r.addEventListener("change", markGender);
+});
+
+form.addEventListener("submit", function (e) {
+  e.preventDefault();
+  fields.forEach(mark);
+  const genderOk = markGender();
+  if (form.checkValidity() && genderOk) {
+    alert("Registration successful!");
+    form.reset();
+    fields.forEach(function (el) {
+      el.classList.remove("is-valid", "is-invalid");
+    });
+  }
+});
+
+form.addEventListener("reset", function () {
+  fields.forEach(function (el) {
+    el.classList.remove("is-valid", "is-invalid");
+  });
+  radios.forEach(function (r) {
+    r.classList.remove("is-invalid");
+  });
+});
+</script>
+</body>
+</html>
